@@ -1,0 +1,21 @@
+
+Packages:
+
+    Main
+        Game Class(Puts all the classes together)
+        Frame Class for Window
+        Game Screen Panel Class
+
+    Enemies:
+         1
+         2
+         3
+
+    States
+        Menu
+        Playing
+        Setting
+
+    Inputs
+      KB
+      Mouse
