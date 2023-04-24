@@ -4,7 +4,7 @@ public class Constants {
     public static class PlayerStance {
         public static final int IDLE = 0;
         public static final int RUN = 1;
-        public static final int ATTACK = 999;
+        public static final int ATTACK = 2;
         public static final int ATTACK_EXTRA = 998;
         public static final int CLIMB = 997;
         public static final int JUMP = 996;
