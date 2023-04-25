@@ -1,12 +1,14 @@
 package Main;
 
 import Entity.*;
+import Tile.TileManager;
 
 import java.awt.*;
 import java.sql.SQLOutput;
 
 public class Game implements Runnable {
     private Panel panel;
+    TileManager tileManger;
     private Frame frame;
     private Thread gameThread;
     private int frames = 0;
@@ -27,7 +29,8 @@ public class Game implements Runnable {
         initClasses();// This needs to be first otherwise you get null pointer exception
         this.panel = new Panel(this);
         Frame gameFrame = new Frame(panel);
-        panel.requestFocus();
+        player.loadLevelData(panel.tileManger.getLevelData());
+
 
 
 
@@ -35,7 +38,9 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200,200);
+        TileManager tileManger = new TileManager(panel);
+        player = new Player(100,100, (int) (128*SCALE), (int) (128*SCALE));
+
     }
 
     private void startGameLoop(){

@@ -1,10 +1,12 @@
 package Tile;
 
+import Main.Game;
 import Main.Panel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import static Main.Game.*;
@@ -20,6 +22,7 @@ public class TileManager {
         mapTiles = new int[TILES_IN_WIDTH][TILES_IN_HEIGHT];
         setPanelTypes();
         loadMap();
+
     }
 
     private void setPanelTypes() {
@@ -101,4 +104,9 @@ public class TileManager {
 
         }
     }
+
+    public int[][] getLevelData(){
+        return this.mapTiles;
+    }
+
 }

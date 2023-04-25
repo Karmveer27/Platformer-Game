@@ -3,6 +3,11 @@ package Entity;
 import Characters.Knight;
 
 import java.awt.*;
+import java.util.Arrays;
+
+import Main.Game;
+import Tile.TileManager.*;
+import static utilz.HelpMethods.*;
 
 import static Characters.Constants.PlayerStance.*;
 
@@ -12,8 +17,15 @@ public class Player extends Entity{
     private int playerStance = IDLE;
     private boolean playerMoving = false, playerAttacking  = false;
     private boolean up,down,left,right;
-    public Player(int deltaX, int deltaY) {
-        super(deltaX, deltaY);
+    int playerSpeed = 2;
+    private int[][] levelData;
+    private float xDrawOffset = 24 * Game.SCALE;
+    private float yDrawOffset = 60 * Game.SCALE;
+
+    public Player(int deltaX, int deltaY,int width, int height) {
+        super(deltaX, deltaY,width,height );
+        initHitbox(deltaX,deltaY,40*Game.SCALE,54*Game.SCALE);
+
     }
     public void updateGame(){
         updatePos();
@@ -26,13 +38,14 @@ public class Player extends Entity{
     public void render(Graphics g){
         Graphics2D g2D = (Graphics2D)g;
         try{
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),deltaX,deltaY, 200,200, null);
+            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(), (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width,height, null);
         }
 
         catch (ArrayIndexOutOfBoundsException e) {
             aniIndex = 0;
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),deltaX,deltaY, 200,200, null);
+            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(), (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width,height, null);
         }
+        drawHitbox(g2D);
 
     }
 
@@ -63,21 +76,29 @@ public class Player extends Entity{
 
     public void updatePos(){
         playerMoving = false;
-        if (left && !right){
-            deltaX += -2;
-            playerMoving = true;
-        }else if ( !left && right){
-            deltaX += 2;
-            playerMoving = true;
-        }
 
-        if (up && !down){
-            deltaY += -2;
+        if(!left && !right && !up && !down)
+            return;
+
+        int xSpeed = 0, ySpeed = 0;
+
+        if (left && !right)
+            xSpeed += -playerSpeed;
+        else if ( !left && right)
+            xSpeed += playerSpeed;
+
+        if (up && !down)
+            ySpeed += -playerSpeed;
+        else if(!up && down)
+            ySpeed += playerSpeed;
+
+        if(canMoveHere((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed), hitbox.width,hitbox.height,levelData )){
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
             playerMoving = true;
-        } else if(!up && down){
-            deltaY += 2;
-            playerMoving = true;
-        }
+            }
+
+
 
 
     }
@@ -98,6 +119,11 @@ public class Player extends Entity{
 
 
         }
+    }
+
+    public void loadLevelData(int[][] mapTiles){
+        this.levelData = mapTiles;
+
     }
 
     public void setUp(boolean x){

@@ -31,6 +31,7 @@ public class Panel extends JPanel {
     addMouseListener(mouseInputs);
     addMouseMotionListener(mouseInputs);
     setPanelSize();
+    setFocusable(true);
 
 
     }
