@@ -77,7 +77,7 @@ public class TileManager {
 
     public void draw(Graphics2D g2D){
         ImageIcon backround = new ImageIcon("resFolder/Project Game Images/pixel-art-forest-platformer-tileset/Background/Bright/Background.png");
-        //g2D.drawImage(backround.getImage(),0,0,TILES_SIZE*TILES_IN_WIDTH,TILES_SIZE*TILES_IN_HEIGHT,null);
+        g2D.drawImage(backround.getImage(),0,0,TILES_SIZE*TILES_IN_WIDTH,TILES_SIZE*TILES_IN_HEIGHT,null);
 
         //Drawing Map Tile
         int col =0 ;

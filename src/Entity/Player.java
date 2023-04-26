@@ -75,30 +75,42 @@ public class Player extends Entity{
         if (!left && !right && !up && !down)
             return;
         float xSpeed = 0, ySpeed = 0;
+
         if (left && !right){
-            xSpeed += -2;
+            xSpeed -= 2;
+            if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
+                if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
+                    hitbox.x += xSpeed;
+                    playerMoving = true;
+            }
         }else if ( !left && right){
             xSpeed += 2;
+            if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
+                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
+                    hitbox.x += xSpeed;
+                    playerMoving = true;
+                }
         }
 
         if (up && !down){
-            ySpeed += -2;
+            ySpeed -= 2;
+            if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
+                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
+                    hitbox.y += ySpeed;
+                    playerMoving = true;
+                }
+
         } else if(!up && down){
             ySpeed += 2;
+            if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y +hitbox.height+ ySpeed),levelData) == false)
+                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y +hitbox.height + ySpeed),levelData) == false){
+                    hitbox.y += ySpeed;
+                    playerMoving = true;
+                }
         }
 
 
 
-        if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
-
-            hitbox.y += ySpeed;
-            hitbox.x += xSpeed;
-            playerMoving = true;
-        }
-
-        else{
-            System.out.println("Failed");
-        }
 
 
     }
