@@ -1,13 +1,9 @@
 package Entity;
 
 import Characters.Knight;
+import Main.Game;
 
 import java.awt.*;
-import java.util.Arrays;
-
-import Main.Game;
-import Tile.TileManager.*;
-import static utilz.HelpMethods.*;
 
 import static Characters.Constants.PlayerStance.*;
 
@@ -16,16 +12,13 @@ public class Player extends Entity{
     private int aniTick, aniIndex, aniSpeed=10;
     private int playerStance = IDLE;
     private boolean playerMoving = false, playerAttacking  = false;
-    private boolean up,down,left,right;
-    int playerSpeed = 2;
-    private int[][] levelData;
-    private float xDrawOffset = 24 * Game.SCALE;
-    private float yDrawOffset = 60 * Game.SCALE;
-
-    public Player(int deltaX, int deltaY,int width, int height) {
-        super(deltaX, deltaY,width,height );
-        initHitbox(deltaX,deltaY,40*Game.SCALE,54*Game.SCALE);
-
+    public boolean up,down,left,right;
+    private float xDrawOffset = 30 * Game.SCALE;
+    private float yDrawOffset = 68 * Game.SCALE;
+    public int[][] levelData;
+    public Player(float x, float y ,int width, int height) {
+        super(x, y,width,height);
+        initHitbox(x, y, 33 * Game.SCALE, 38 * Game.SCALE);
     }
     public void updateGame(){
         updatePos();
@@ -38,14 +31,17 @@ public class Player extends Entity{
     public void render(Graphics g){
         Graphics2D g2D = (Graphics2D)g;
         try{
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(), (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width,height, null);
+            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), 200,200, null);
         }
 
         catch (ArrayIndexOutOfBoundsException e) {
             aniIndex = 0;
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(), (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width,height, null);
+            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), 200,200, null);
         }
-        drawHitbox(g2D);
+        drawHitbox(g);
+        int x = (int) (hitbox.x / Game.TILES_SIZE);
+        int y = (int) (hitbox.y / Game.TILES_SIZE);
+        //System.out.println("X: " + x + "Y: " + y);
 
     }
 
@@ -76,30 +72,50 @@ public class Player extends Entity{
 
     public void updatePos(){
         playerMoving = false;
-
-        if(!left && !right && !up && !down)
+        if (!left && !right && !up && !down)
             return;
+        float xSpeed = 0, ySpeed = 0;
+        if (left && !right){
+            xSpeed += -2;
+        }else if ( !left && right){
+            xSpeed += 2;
+        }
 
-        int xSpeed = 0, ySpeed = 0;
+        if (up && !down){
+            ySpeed += -2;
+        } else if(!up && down){
+            ySpeed += 2;
+        }
 
-        if (left && !right)
-            xSpeed += -playerSpeed;
-        else if ( !left && right)
-            xSpeed += playerSpeed;
 
-        if (up && !down)
-            ySpeed += -playerSpeed;
-        else if(!up && down)
-            ySpeed += playerSpeed;
 
-        if(canMoveHere((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed), hitbox.width,hitbox.height,levelData )){
-            hitbox.x += xSpeed;
+        if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
+
             hitbox.y += ySpeed;
+            hitbox.x += xSpeed;
             playerMoving = true;
-            }
+        }
+
+        else{
+            System.out.println("Failed");
+        }
 
 
+    }
 
+    public boolean isSolid(int x,int y, int[][] levelData){
+        boolean solid = false;
+        if(Collision.checkIfSolid(x,y,levelData,this)==true)
+            solid = true;
+        return solid;
+
+    }
+    public boolean isSolid(){
+        return false;
+    }
+
+    public void loadData(int[][] levelData){
+        this.levelData = levelData;
 
     }
 
@@ -119,11 +135,6 @@ public class Player extends Entity{
 
 
         }
-    }
-
-    public void loadLevelData(int[][] mapTiles){
-        this.levelData = mapTiles;
-
     }
 
     public void setUp(boolean x){

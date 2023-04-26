@@ -1,12 +1,10 @@
 package Tile;
 
-import Main.Game;
 import Main.Panel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import static Main.Game.*;
@@ -15,14 +13,13 @@ import static Main.Game.*;
 public class TileManager {
     Panel panel;
     Tile[] tiles;
-    int[][] mapTiles;
+    public int[][] mapTiles;
     public TileManager(Panel panel){
         this.panel = panel;
         tiles = new Tile[50];
         mapTiles = new int[TILES_IN_WIDTH][TILES_IN_HEIGHT];
         setPanelTypes();
         loadMap();
-
     }
 
     private void setPanelTypes() {
@@ -80,7 +77,7 @@ public class TileManager {
 
     public void draw(Graphics2D g2D){
         ImageIcon backround = new ImageIcon("resFolder/Project Game Images/pixel-art-forest-platformer-tileset/Background/Bright/Background.png");
-        g2D.drawImage(backround.getImage(),0,0,TILES_SIZE*TILES_IN_WIDTH,TILES_SIZE*TILES_IN_HEIGHT,null);
+        //g2D.drawImage(backround.getImage(),0,0,TILES_SIZE*TILES_IN_WIDTH,TILES_SIZE*TILES_IN_HEIGHT,null);
 
         //Drawing Map Tile
         int col =0 ;
@@ -104,9 +101,4 @@ public class TileManager {
 
         }
     }
-
-    public int[][] getLevelData(){
-        return this.mapTiles;
-    }
-
 }
