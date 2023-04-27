@@ -10,12 +10,14 @@ import static Characters.Constants.PlayerStance.*;
 public class Player extends Entity{
     Knight knight = new Knight();
     private int aniTick, aniIndex, aniSpeed=10;
+    float playerSpeed = 2;
     private int playerStance = IDLE;
     private boolean playerMoving = false, playerAttacking  = false;
     public boolean up,down,left,right;
     private float xDrawOffset = 30 * Game.SCALE;
     private float yDrawOffset = 68 * Game.SCALE;
     public int[][] levelData;
+
     public Player(float x, float y ,int width, int height) {
         super(x, y,width,height);
         initHitbox(x, y, 33 * Game.SCALE, 38 * Game.SCALE);
@@ -41,7 +43,7 @@ public class Player extends Entity{
         drawHitbox(g);
         int x = (int) (hitbox.x / Game.TILES_SIZE);
         int y = (int) (hitbox.y / Game.TILES_SIZE);
-        //System.out.println("X: " + x + "Y: " + y);
+
 
     }
 
@@ -77,14 +79,14 @@ public class Player extends Entity{
         float xSpeed = 0, ySpeed = 0;
 
         if (left && !right){
-            xSpeed -= 2;
+            xSpeed -= playerSpeed;
             if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
                     hitbox.x += xSpeed;
                     playerMoving = true;
             }
         }else if ( !left && right){
-            xSpeed += 2;
+            xSpeed += playerSpeed;
             if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
                     hitbox.x += xSpeed;
@@ -93,7 +95,7 @@ public class Player extends Entity{
         }
 
         if (up && !down){
-            ySpeed -= 2;
+            ySpeed -= playerSpeed;
             if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
                     hitbox.y += ySpeed;
@@ -101,7 +103,7 @@ public class Player extends Entity{
                 }
 
         } else if(!up && down){
-            ySpeed += 2;
+            ySpeed += playerSpeed;
             if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y +hitbox.height+ ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y +hitbox.height + ySpeed),levelData) == false){
                     hitbox.y += ySpeed;
