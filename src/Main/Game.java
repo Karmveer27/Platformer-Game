@@ -15,13 +15,13 @@ public class Game implements Runnable {
     double UPS_Set = 200;
     private Player player;
 
-    public final static int TILES_DEFAULT_SIZE = 32;
-    public final static float SCALE = 1.5f;
-    public final static int  TILES_IN_WIDTH = 26;
-    public final static int TILES_IN_HEIGHT = 14;
-    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
-    public final static int GAME_WIDTH = TILES_SIZE *TILES_IN_WIDTH;
-    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+    protected final static int TILES_DEFAULT_SIZE = 32;
+    protected final static float SCALE = 2f;
+    protected final static int  TILES_IN_WIDTH = 26;
+    protected final static int TILES_IN_HEIGHT = 14;
+    protected final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    protected final static int GAME_WIDTH = TILES_SIZE *TILES_IN_WIDTH;
+    protected final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
     public Game(){
         initClasses();// This needs to be first otherwise you get null pointer exception
@@ -50,7 +50,7 @@ public class Game implements Runnable {
     }
 
     public void render(Graphics g){
-        player.render(g);
+        player.getPlayerRender().render(g);
     }
 
 
@@ -94,9 +94,11 @@ public class Game implements Runnable {
         }
     }
 
-    public Player getPlayer(){
-        return this.player;
-    }
+    public Player getPlayer(){return this.player;}
+    public static float getScale(){return SCALE;}
+    public static int getTilesInWidth(){return TILES_IN_WIDTH;}
+    public static int  getTilesInHeight(){return TILES_IN_HEIGHT;}
+    public static int getTilesSize(){return TILES_SIZE;}
 
 
 }

@@ -8,72 +8,31 @@ import java.awt.*;
 import static Characters.Constants.PlayerStance.*;
 
 public class Player extends Entity{
-    Knight knight = new Knight();
-    private int aniTick, aniIndex, aniSpeed=10;
-    float playerSpeed = 2;
-    private int playerStance = IDLE;
-    private boolean playerMoving = false, playerAttacking  = false;
-    public boolean up,down,left,right;
-    private float xDrawOffset = 30 * Game.SCALE;
-    private float yDrawOffset = 68 * Game.SCALE;
-    public int[][] levelData;
+    protected boolean up,down,left,right;
+    // X and Y offset is the distance of the player picture edge and height respectively to the edge of the player
+    float SCALE = Game.getScale();
+    protected float xDrawOffset = 30 * SCALE;
+    protected float yDrawOffset = 68 * SCALE;
+    public int[][] levelData; // Text file that stores tile information regarding location
+    PlayerRender playerRender;
+    float playerSpeed = 1.5F * SCALE;
 
     public Player(float x, float y ,int width, int height) {
         super(x, y,width,height);
-        initHitbox(x, y, 33 * Game.SCALE, 38 * Game.SCALE);
+        playerRender = new PlayerRender(this);
+        // Player hitbox
+        initHitbox(x, y, 33 * SCALE, 38 * SCALE);
     }
     public void updateGame(){
         updatePos();
-        updateAnimationIndex();
-        setAnimation();
+        playerRender.updateAnimationIndex();
+        playerRender.setAnimation();
 
 
     }
-
-    public void render(Graphics g){
-        Graphics2D g2D = (Graphics2D)g;
-        try{
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), 200,200, null);
-        }
-
-        catch (ArrayIndexOutOfBoundsException e) {
-            aniIndex = 0;
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), 200,200, null);
-        }
-        drawHitbox(g);
-        int x = (int) (hitbox.x / Game.TILES_SIZE);
-        int y = (int) (hitbox.y / Game.TILES_SIZE);
-
-
-    }
-
-    private void setAnimation() {
-        int startAnimation = playerStance;
-        if(playerMoving)
-            playerStance = RUN;
-        else
-            playerStance = IDLE;
-        if (playerAttacking)
-            playerStance = ATTACK;
-
-        if (startAnimation != playerStance)
-            resetAniTick();
-
-    }
-
-    private void resetAniTick() {
-        aniIndex = 0;
-        aniTick = 0;
-    }
-
-
-    public void setMoving(boolean moving){
-        this.playerMoving = moving;
-
-    }
-
+    // Depending on input, updatePos() will send out the future value to isSolid() to confirm player can move to that value
     public void updatePos(){
-        playerMoving = false;
+        playerRender.setMoving(false);
         if (!left && !right && !up && !down)
             return;
         float xSpeed = 0, ySpeed = 0;
@@ -83,14 +42,14 @@ public class Player extends Entity{
             if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
                     hitbox.x += xSpeed;
-                    playerMoving = true;
+                    playerRender.setMoving(true);
             }
         }else if ( !left && right){
             xSpeed += playerSpeed;
             if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
                     hitbox.x += xSpeed;
-                    playerMoving = true;
+                    playerRender.setMoving(true);
                 }
         }
 
@@ -99,7 +58,7 @@ public class Player extends Entity{
             if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
                     hitbox.y += ySpeed;
-                    playerMoving = true;
+                    playerRender.setMoving(true);
                 }
 
         } else if(!up && down){
@@ -107,7 +66,7 @@ public class Player extends Entity{
             if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y +hitbox.height+ ySpeed),levelData) == false)
                 if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y +hitbox.height + ySpeed),levelData) == false){
                     hitbox.y += ySpeed;
-                    playerMoving = true;
+                    playerRender.setMoving(true);
                 }
         }
 
@@ -116,7 +75,7 @@ public class Player extends Entity{
 
 
     }
-
+    // Predictive method to check if the future tile is a solid or note
     public boolean isSolid(int x,int y, int[][] levelData){
         boolean solid = false;
         if(Collision.checkIfSolid(x,y,levelData,this)==true)
@@ -124,32 +83,14 @@ public class Player extends Entity{
         return solid;
 
     }
-    public boolean isSolid(){
-        return false;
-    }
+
 
     public void loadData(int[][] levelData){
         this.levelData = levelData;
 
     }
 
-    private void updateAnimationIndex() {
-        aniTick++;
-        if (aniTick > aniSpeed){
-            aniTick = 0;
-            aniIndex ++;
-            try{
-                knight.stances.get(playerStance)[aniIndex].getImage();
-            }
 
-            catch (ArrayIndexOutOfBoundsException e) {
-                aniIndex = 0;
-                playerAttacking  = false;
-            }
-
-
-        }
-    }
 
     public void setUp(boolean x){
         this.up = x;
@@ -170,13 +111,8 @@ public class Player extends Entity{
         this.down = x;
     }
 
-    public void setPlayerAttacking(boolean attacking){
-        this.playerAttacking = attacking;
-
+    public PlayerRender getPlayerRender(){
+        return playerRender;
     }
-
-
-
-
 
 }

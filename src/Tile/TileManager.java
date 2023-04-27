@@ -1,5 +1,6 @@
 package Tile;
 
+import Main.Game;
 import Main.Panel;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ public class TileManager {
     public TileManager(Panel panel){
         this.panel = panel;
         tiles = new Tile[50];
-        mapTiles = new int[TILES_IN_WIDTH][TILES_IN_HEIGHT];
+        mapTiles = new int[Game.getTilesInWidth()][Game.getTilesInHeight()];
         setPanelTypes();
         loadMap();
     }
@@ -45,9 +46,9 @@ public class TileManager {
         int col = 0;
         int row = 0;
 
-        while(col < TILES_IN_WIDTH && row < TILES_IN_HEIGHT) {
+        while(col < Game.getTilesInWidth() && row < Game.getTilesInHeight()) {
             String line = br.nextLine();
-            while (col < TILES_IN_WIDTH) {
+            while (col < Game.getTilesInWidth()) {
                 String[] numbers = line.split(" ");
 
                 int num = Integer.parseInt(numbers[col]);
@@ -56,7 +57,7 @@ public class TileManager {
                 col++;
 
             }
-            if (col == TILES_IN_WIDTH){
+            if (col == Game.getTilesInWidth()){
                 col = 0;
                 row++;
 
@@ -77,23 +78,23 @@ public class TileManager {
 
     public void draw(Graphics2D g2D){
         ImageIcon backround = new ImageIcon("resFolder/Project Game Images/pixel-art-forest-platformer-tileset/Background/Bright/Background.png");
-        g2D.drawImage(backround.getImage(),0,0,TILES_SIZE*TILES_IN_WIDTH,TILES_SIZE*TILES_IN_HEIGHT,null);
+        g2D.drawImage(backround.getImage(),0,0,Game.getTilesSize()*Game.getTilesInWidth(),Game.getTilesSize()*Game.getTilesInHeight(),null);
 
         //Drawing Map Tile
         int col =0 ;
         int row = 0;
         int x = 0;
         int y = 0;
-        while(col < TILES_IN_WIDTH && row < TILES_IN_HEIGHT){
+        while(col < Game.getTilesInWidth() && row < Game.getTilesInHeight()){
             int tileNum = mapTiles[col][row];
-            g2D.drawImage(tiles[tileNum].image.getImage(),x,y,TILES_SIZE,TILES_SIZE,null );
+            g2D.drawImage(tiles[tileNum].image.getImage(),x,y,Game.getTilesSize(),Game.getTilesSize(),null );
             col++;
-            x += TILES_SIZE;
-            if (col == TILES_IN_WIDTH){
+            x += Game.getTilesSize();
+            if (col == Game.getTilesInWidth()){
                 col = 0;
                 x = 0;
                 row++;
-                y+= TILES_SIZE;
+                y+= Game.getTilesSize();
 
             }
 

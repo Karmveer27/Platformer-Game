@@ -6,8 +6,8 @@ public class Collision {
 
     public static boolean checkIfSolid(int x, int y, int[][] levelData,Player player){
         boolean isSolid = false;
-        int xValue = x/ Game.TILES_SIZE;
-        int yValue = y/Game.TILES_SIZE;
+        int xValue = x/ Game.getTilesSize();
+        int yValue = y/Game.getTilesSize();
 
 
             if (levelData[xValue][yValue] != 0)
