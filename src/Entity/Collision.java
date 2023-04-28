@@ -8,17 +8,13 @@ public class Collision {
         boolean isSolid = false;
         int xValue = x/ Game.getTilesSize();
         int yValue = y/Game.getTilesSize();
+            try {
+                if (levelData[xValue][yValue] != 0)
+                    isSolid = true;
 
-
-            if (levelData[xValue][yValue] != 0)
+            }catch(ArrayIndexOutOfBoundsException e){
                 isSolid = true;
-
-
-
+            }
         return isSolid;
-
-
-
-
     }
 }

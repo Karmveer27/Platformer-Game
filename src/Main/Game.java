@@ -16,7 +16,7 @@ public class Game implements Runnable {
     private Player player;
 
     protected final static int TILES_DEFAULT_SIZE = 32;
-    protected final static float SCALE = 2f;
+    protected final static float SCALE = 1.5f;
     protected final static int  TILES_IN_WIDTH = 26;
     protected final static int TILES_IN_HEIGHT = 14;
     protected final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);

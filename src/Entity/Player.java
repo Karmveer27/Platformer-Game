@@ -16,6 +16,12 @@ public class Player extends Entity{
     public int[][] levelData; // Text file that stores tile information regarding location
     PlayerRender playerRender;
     float playerSpeed = 1.5F * SCALE;
+    //Variables for Gravity
+    private float airSpeed = 0f;
+    private float gravity = 0.04f * SCALE;
+    private float jumpSpeed = -2.25f * SCALE;
+    private float fallSpeedAfterCollision = 0.5f * SCALE;
+    private boolean inAir = false;
 
     public Player(float x, float y ,int width, int height) {
         super(x, y,width,height);
