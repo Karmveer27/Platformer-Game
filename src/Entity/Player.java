@@ -15,19 +15,23 @@ public class Player extends Entity{
     protected float yDrawOffset = 68 * SCALE;
     public int[][] levelData; // Text file that stores tile information regarding location
     PlayerRender playerRender;
-    float playerSpeed = 1.5F * SCALE;
+    float playerSpeed = 0.75F * SCALE;
     //Variables for Gravity
+    private boolean jump;
     private float airSpeed = 0f;
     private float gravity = 0.04f * SCALE;
-    private float jumpSpeed = -2.25f * SCALE;
+    private float jumpSpeed = -2.75f * SCALE;
     private float fallSpeedAfterCollision = 0.5f * SCALE;
     private boolean inAir = false;
+
+
 
     public Player(float x, float y ,int width, int height) {
         super(x, y,width,height);
         playerRender = new PlayerRender(this);
         // Player hitbox
-        initHitbox(x, y, 33 * SCALE, 38 * SCALE);
+        initHitbox(x, y, 33* SCALE, 38* SCALE);
+
     }
     public void updateGame(){
         updatePos();
@@ -36,58 +40,101 @@ public class Player extends Entity{
 
 
     }
-    // Depending on input, updatePos() will send out the future value to isSolid() to confirm player can move to that value
+    // Depending on input, updatePos() will send out the future value to updateXPos --> isSolid() to confirm player can move to that value
     public void updatePos(){
         playerRender.setMoving(false);
-        if (!left && !right && !up && !down)
+        if(jump)
+            jump();
+        if (!left && !right && !inAir)
             return;
-        float xSpeed = 0, ySpeed = 0;
+        float xSpeed = 0;
 
         if (left && !right){
             xSpeed -= playerSpeed;
-            if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
-                if(isSolid((int) (hitbox.x + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
-                    hitbox.x += xSpeed;
-                    playerRender.setMoving(true);
-            }
-        }else if ( !left && right){
+            updateXPos(xSpeed);
+        }
+        else if (!left && right){
             xSpeed += playerSpeed;
-            if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
-                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y+hitbox.height + ySpeed),levelData) == false){
-                    hitbox.x += xSpeed;
-                    playerRender.setMoving(true);
-                }
+            updateXPos(xSpeed);
         }
 
-        if (up && !down){
-            ySpeed -= playerSpeed;
-            if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y + ySpeed),levelData) == false)
-                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y + ySpeed),levelData) == false){
-                    hitbox.y += ySpeed;
-                    playerRender.setMoving(true);
-                }
+        if(!inAir)
+            updateYPosNotInAir();
 
-        } else if(!up && down){
-            ySpeed += playerSpeed;
-            if(isSolid((int) (hitbox.x +  xSpeed), (int) (hitbox.y +hitbox.height+ ySpeed),levelData) == false)
-                if(isSolid((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y +hitbox.height + ySpeed),levelData) == false){
-                    hitbox.y += ySpeed;
-                    playerRender.setMoving(true);
-                }
+
+        if (inAir){
+            updateYPosInAir(xSpeed);
         }
-
-
-
-
+        else
+            updateXPos(xSpeed);
+        //playerRender.setMoving(true);
 
     }
+    public void updateXPos(float xSpeed){
+        if (left && !right){
+            Point point1 = new Point((int) (hitbox.x + xSpeed),(int) (hitbox.y ));
+            Point point2 = new Point((int) (hitbox.x + xSpeed), (int) (hitbox.y+hitbox.height ));
+            if(isSolid(point1,point2,levelData) == false){
+                    hitbox.x += xSpeed;
+                    playerRender.setMoving(true);
+                }
+        }
+        if (!left && right){
+            Point point1 = new Point((int) (hitbox.x + hitbox.width + xSpeed),(int) (hitbox.y ));
+            Point point2 = new Point((int) (hitbox.x + hitbox.width + xSpeed), (int) (hitbox.y+hitbox.height ));
+            if(isSolid(point1,point2,levelData) == false){
+                    hitbox.x += xSpeed;
+                    playerRender.setMoving(true);
+                }
+        }
+    }
+
+    public void updateYPosNotInAir(){
+        Point point1 = new Point((int) hitbox.x, (int) (hitbox.getY()+hitbox.getHeight()+1));
+        Point point2 = new Point((int) (hitbox.getX()+hitbox.getWidth()), (int) (hitbox.getY()+hitbox.getHeight()+1));
+        if(!isSolid(point1,point2,levelData))
+            inAir = true;
+
+    }
+
+    public void updateYPosInAir(float xSpeed){
+        Point point1 = new Point((int) (hitbox.x),(int) (hitbox.y + airSpeed));
+        Point point2 = new Point((int) (hitbox.x + hitbox.width),(int) (hitbox.y +hitbox.height + airSpeed ));
+        if(isSolid(point1,point2,levelData) == false) {
+            hitbox.y += airSpeed;
+            airSpeed += gravity;
+            updateXPos(xSpeed);
+        }
+        else {
+            hitbox.y = Collision.GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed) + Game.getTilesSize();
+            if (airSpeed > 0)
+                resetInAir();
+
+            else
+                airSpeed = fallSpeedAfterCollision;
+            updateXPos(xSpeed);
+        }
+
+    }
+
+
     // Predictive method to check if the future tile is a solid or note
-    public boolean isSolid(int x,int y, int[][] levelData){
+    public boolean isSolid(Point point1,Point point2, int[][] levelData){
         boolean solid = false;
-        if(Collision.checkIfSolid(x,y,levelData,this)==true)
+        if(Collision.checkIfSolid(point1,point2,levelData,this)==true)
             solid = true;
         return solid;
 
+    }
+    private void resetInAir(){
+        inAir = false;
+        airSpeed = 0;
+    }
+    private void jump(){
+        if(inAir)
+            return;
+        inAir = true;
+        airSpeed = jumpSpeed;
     }
 
 
@@ -110,6 +157,9 @@ public class Player extends Entity{
     public void setRight(boolean x){
         this.right = x;
     }
+    public void setJump(boolean x){
+        this.jump = x;
+    }
     public void setAllDir(boolean x){
         this.right = x;
         this.left = x;
@@ -117,8 +167,11 @@ public class Player extends Entity{
         this.down = x;
     }
 
+
     public PlayerRender getPlayerRender(){
         return playerRender;
     }
+
+
 
 }

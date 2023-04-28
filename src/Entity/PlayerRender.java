@@ -28,7 +28,7 @@ public class PlayerRender {
 
         catch (ArrayIndexOutOfBoundsException e) {
             aniIndex = 0;
-            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (player.hitbox.x - player.xDrawOffset), (int) (player.hitbox.y - player.yDrawOffset), 200,200, null);
+            g2D.drawImage(knight.stances.get(playerStance)[aniIndex].getImage(),(int) (player.hitbox.x - player.xDrawOffset), (int) (player.hitbox.y - player.yDrawOffset), (int) (Game.getScale() * 128), (int) (Game.getScale()*128), null);
         }
         player.drawHitbox(g);
         int x = (int) (player.hitbox.x / Game.getTilesSize());
