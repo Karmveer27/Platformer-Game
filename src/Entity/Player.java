@@ -115,6 +115,7 @@ public class Player extends Entity{
             updateXPos(xSpeed);
         }
 
+
     }
 
 
@@ -142,6 +143,9 @@ public class Player extends Entity{
         this.levelData = levelData;
 
     }
+    public PlayerRender getPlayerRender(){
+        return playerRender;
+    }
 
 
 
@@ -168,8 +172,12 @@ public class Player extends Entity{
     }
 
 
-    public PlayerRender getPlayerRender(){
-        return playerRender;
+    public boolean getInAir(){
+        return inAir;
+    }
+
+    public float getAirSpeed(){
+        return airSpeed;
     }
 
 

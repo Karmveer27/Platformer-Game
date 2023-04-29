@@ -5,9 +5,10 @@ public class Constants {
         public static final int IDLE = 0;
         public static final int RUN = 1;
         public static final int ATTACK = 2;
+        public static final int JUMP = 3;
+        public static final int FALL = 4;
         public static final int ATTACK_EXTRA = 998;
         public static final int CLIMB = 997;
-        public static final int JUMP = 996;
         public static final int HIGH_JUMP = 995;
         public static final int HURT = 994;
         public static final int PUSH = 993;
@@ -21,12 +22,12 @@ public class Constants {
             switch (stance) {
                 case IDLE, HIGH_JUMP:
                     return 12;
-                case ATTACK, CLIMB, HURT, PUSH:
+                case ATTACK, CLIMB, HURT, PUSH, FALL:
                     return 4;
                 case ATTACK_EXTRA, RUN, RUN_ATTACK:
                     return 8;
                 case JUMP:
-                    return 7;
+                    return 3;
                 case WALK, WALK_ATTACK:
                     return 6;
                 case DEATH:

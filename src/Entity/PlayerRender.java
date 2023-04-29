@@ -43,6 +43,15 @@ public class PlayerRender {
             playerStance = RUN;
         else
             playerStance = IDLE;
+        if (player.getInAir()){
+            if(player.getAirSpeed()<0)
+                playerStance = JUMP;
+            else
+                playerStance = FALL;
+
+
+        }
+
         if (playerAttacking)
             playerStance = ATTACK;
 
