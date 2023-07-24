@@ -18,7 +18,7 @@ public abstract class Entity {
     }
 
     protected void drawHitbox(Graphics g) {
-        // For debugging the hitbox, hide this before 'releasing' final version
+        // For debugging the hitbox, hide this before 'releasing' final version!!!!!!
         g.setColor(Color.PINK);
         g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
 
